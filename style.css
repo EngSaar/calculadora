@@ -1,0 +1,77 @@
+.special {
+    background-color: orange;
+}
+
+.ret {
+    width: 4rem;
+    height: 2rem;
+}
+
+.std {
+    width: 2rem;
+    height: 2rem;
+}
+
+.visor {
+    background-color: black;
+    color: aliceblue;
+    width: 8rem;
+    flex-wrap: wrap;
+}
+
+section {
+    margin-left: 20vh;
+    margin-top: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: space-around;
+    flex-direction: column;
+    text-align: end;
+}
+
+.calculator {
+    border: rgb(35, 35, 35) 0.2em solid;
+    display: grid;
+    row-gap: 0rem;
+    column-gap: 0rem;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.utilitario {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.ret2 {
+    width: 6rem;
+    height: 2rem;
+}
+
+button:hover {
+    background-color: gold;
+    color: azure;
+}
+
+body {
+    background-color: cyan;
+}
+
+h1 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: #f3ec78;
+    background-image: linear-gradient(29deg, rgba(174, 200, 255, 0.9640231092436975) 0%, rgba(9, 121, 108, 1) 35%, rgba(0, 255, 231, 0.33657212885154064) 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+
+}
