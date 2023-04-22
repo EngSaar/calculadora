@@ -1,4 +1,6 @@
 let operators = ['x', '%', '+', '-', '='];
+let keyboardOperators = ['*', '/', '+', '-', '='];
+
 const el = document.querySelector(".visor")
 
 
@@ -10,6 +12,12 @@ function ApontarValorParaOVisor(valor) {
             el.innerText = orquestrador();;
         } else {
             concat(valor);
+        }
+    } else if (valor.length == 2) {
+        if (el.innerText.length > 1) {
+            el.innerText = el.innerText.substring(0, el.innerText.length - 1)
+        } else {
+            el.innerText = "0";
         }
     }
 }
@@ -29,7 +37,6 @@ function orquestrador() {
     let hasOperated;
 
     do {
-        //Maybe return that guy
         for (let i = value.length - 1; i >= 0; i--) {
             if (value[i] === "-") {
                 if (i > 0 && value[i - 1] === "-") {
@@ -109,9 +116,6 @@ function parseador(value, operacao) {
         result = calculate.calculate(substring, substring2);
     }
 
-    console.info(substring, head1, tail1, substring2, head2, tail2, result, value);
-
-    console.debug(value, result)
     return String(value).replaceAt(head1, tail2, result);
 
     function FindB(i) {
@@ -147,68 +151,74 @@ function parseador(value, operacao) {
 }
 
 String.prototype.replaceAt = function (startIndex, endIndex, replacement) {
-    console.log(this.substring(0, startIndex), replacement, this.substring(endIndex + 1))
     return this.substring(0, startIndex) + replacement + this.substring(endIndex + 1);
 }
 
-let Calculadora = function () {
-    this.strategy = "";
-};
-
-Calculadora.prototype = {
-    setStrategy: function (strategy) {
+class Calculadora {
+    constructor() {
+        this.strategy = "";
+    }
+    setStrategy(strategy) {
         this.strategy = strategy;
-    },
-
-    calculate: function (a, b) {
+    }
+    calculate(a, b) {
         return this.strategy.calculate(a, b);
     }
-};
+}
 
-let MULT = function () {
-    this.calculate = function (a, b) {
-        ({ a, b } = hateNan(a, b));
-        return Number.parseFloat(a) * Number.parseFloat(b);
-    }
 
-    this.toString = function () {
-        return `Multiplicacao Stratategy: `
+class MULT {
+    constructor() {
+        this.calculate = function (a, b) {
+            ({ a, b } = hateNan(a, b));
+            return Number.parseFloat(a) * Number.parseFloat(b);
+        };
+
+        this.toString = function () {
+            return `Multiplicacao Stratategy: `;
+        };
     }
 }
 
-let DIVISION = function () {
-    this.calculate = function (a, b) {
-        ({ a, b } = hateNan(a, b));
-        if (b == 0) {
-            throw Error;
-        }
-        return (Number.parseFloat(a) / Number.parseFloat(b)).toFixed(2);
-    }
+class DIVISION {
+    constructor() {
+        this.calculate = function (a, b) {
+            ({ a, b } = hateNan(a, b));
+            if (b == 0) {
+                throw Error;
+            }
+            return (Number.parseFloat(a) / Number.parseFloat(b)).toFixed(2);
+        };
 
-    this.toString = function () {
-        return `Divisão Stratategy: `
-    }
-}
-
-let PLUS = function () {
-    this.calculate = function (a, b) {
-        ({ a, b } = hateNan(a, b));
-        return Number.parseFloat(a) + Number.parseFloat(b);
-    }
-
-    this.toString = function () {
-        return `Soma Stratategy: `
+        this.toString = function () {
+            return `Divisão Stratategy: `;
+        };
     }
 }
 
-let SUB = function () {
-    this.calculate = function (a, b) {
-        ({ a, b } = hateNan(a, b));
-        return Number.parseFloat(a) - Number.parseFloat(b);
-    }
+class PLUS {
+    constructor() {
+        this.calculate = function (a, b) {
+            ({ a, b } = hateNan(a, b));
+            return Number.parseFloat(a) + Number.parseFloat(b);
+        };
 
-    this.toString = function () {
-        return `Subtração Stratategy: `
+        this.toString = function () {
+            return `Soma Stratategy: `;
+        };
+    }
+}
+
+class SUB {
+    constructor() {
+        this.calculate = function (a, b) {
+            ({ a, b } = hateNan(a, b));
+            return Number.parseFloat(a) - Number.parseFloat(b);
+        };
+
+        this.toString = function () {
+            return `Subtração Stratategy: `;
+        };
     }
 }
 
@@ -237,19 +247,32 @@ function strategySetter(operacao) {
 }
 
 document.querySelector(".holder").addEventListener("click", function (event) {
-    //console.log(`${event.target.innerText}`);
     ApontarValorParaOVisor(event.target.innerText)
 }, false);
 
-function debugRunner() {
-    /*
-
-    let calculate = new Calculadora();
-
-    let op = new DIVISION();
-    calculate.setStrategy(op);
-    console.log("Operacao Strategy: " + calculate.calculate(4, 5));
-    parseador('85-85-85', '-');
-    */
-}
-debugRunner()
+let element = document.body;
+element.addEventListener('keydown', event => {
+    console.log(`${event.key}`)
+    for (let entity in keyboardOperators) {
+        if (String(event.key).includes(keyboardOperators[entity])) {
+            if (keyboardOperators[entity] === "*") {
+                ApontarValorParaOVisor("x")
+            } else if (keyboardOperators[entity] === "/") {
+                ApontarValorParaOVisor("%")
+            } else {
+                ApontarValorParaOVisor(event.key)
+            }
+        }
+    }
+    if (!Number.isNaN(Number.parseInt(event.key))) {
+        ApontarValorParaOVisor(event.key);
+    } else if (event.key == 'Enter') {
+        el.innerText = orquestrador();
+    } else if (event.key == "Backspace") {
+        if (el.innerText.length > 1) {
+            el.innerText = el.innerText.substring(0, el.innerText.length - 1)
+        } else {
+            el.innerText = "0";
+        }
+    }
+}, false);

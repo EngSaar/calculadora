@@ -20,7 +20,6 @@
 }
 
 section {
-    margin-left: 20vh;
     margin-top: 10vh;
     display: flex;
     justify-content: center;
@@ -48,6 +47,22 @@ section {
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
+}
+
+.holder {
+    background-color: rgb(244, 239, 226);
+    border: rgb(252, 237, 219) 5px solid;
+    border-radius: 3%;
+
+    margin-top: 0vh;
+    height: 20rem;
+    width: 15rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: space-around;
+    flex-direction: column;
+    text-align: end;
 }
 
 .ret2 {
