@@ -1,4 +1,4 @@
-let operators = ['x', '/', '+', '-', '='];
+let operators = ['x', '%', '+', '-', '='];
 const el = document.querySelector(".visor")
 
 
@@ -29,28 +29,50 @@ function orquestrador() {
     let hasOperated;
 
     do {
-        if (value[0] == '-' && value[1] == '-')
-            return value.slice(1);
+        //Maybe return that guy
+        for (let i = value.length - 1; i >= 0; i--) {
+            if (value[i] === "-") {
+                if (i > 0 && value[i - 1] === "-") {
+                    value = value.substring(0, i - 1) + value.substring(i);
+                    ++i;
+                }
+                if (i == 0 && String(value).split("-").length === 2) {
+                    let isFinnish = true;
+                    for (let entity in operators) {
+                        if (entity != "3") {
+                            if (String(value).includes(operators[entity])) {
+                                isFinnish = false;
+                            }
+                        }
+                    }
+                    if (isFinnish) {
+                        return value;
+                    }
+                }
+            }
+        }
 
         hasOperated = false;
+        if (!hasOperated && String(value).includes('%')) {
+            value = parseador(value, '%');
+            hasOperated = true;
+        }
 
-        if (value.includes('x')) {
+        if (!hasOperated && String(value).includes('x')) {
             value = parseador(value, 'x');
             hasOperated = true;
         }
 
-        if (value.includes('%')) {
-            value = parseador(value, '%');
-            hasOperated = true;
-        }
-        if (value.includes('+')) {
+        if (!hasOperated && String(value).includes('+')) {
             value = parseador(value, '+');
             hasOperated = true;
         }
-        if (value.includes('-')) {
+
+        if (!hasOperated && String(value).includes('-')) {
             value = parseador(value, '-');
             hasOperated = true;
         }
+
         if (hasOperated === false) {
             hasFinish = true;
         }
@@ -83,24 +105,21 @@ function parseador(value, operacao) {
 
     if (head1 > 0 && value[head1 - 1] == '-') {
         result = calculate.calculate("-" + substring, substring2);
-        console.info(value.replaceAt(head1 - 1, tail2, result));
-        result = value.replaceAt(head1 - 1, tail2, result);
     } else {
         result = calculate.calculate(substring, substring2);
     }
 
     console.info(substring, head1, tail1, substring2, head2, tail2, result, value);
 
-
-    return value.replaceAt(head1, tail2, result);
+    console.debug(value, result)
+    return String(value).replaceAt(head1, tail2, result);
 
     function FindB(i) {
         head2 = i + 1;
         for (let k = i; k < value.length; k++) {
 
-            tail2 = k + 1;
+            tail2 = k;
             if (operators.includes(value[k + 1])) {
-                ++tail2;
                 break;
             }
         }
@@ -128,7 +147,8 @@ function parseador(value, operacao) {
 }
 
 String.prototype.replaceAt = function (startIndex, endIndex, replacement) {
-    return this.substring(0, startIndex) + replacement + this.substring(endIndex);
+    console.log(this.substring(0, startIndex), replacement, this.substring(endIndex + 1))
+    return this.substring(0, startIndex) + replacement + this.substring(endIndex + 1);
 }
 
 let Calculadora = function () {
@@ -147,6 +167,7 @@ Calculadora.prototype = {
 
 let MULT = function () {
     this.calculate = function (a, b) {
+        ({ a, b } = hateNan(a, b));
         return Number.parseFloat(a) * Number.parseFloat(b);
     }
 
@@ -157,6 +178,7 @@ let MULT = function () {
 
 let DIVISION = function () {
     this.calculate = function (a, b) {
+        ({ a, b } = hateNan(a, b));
         if (b == 0) {
             throw Error;
         }
@@ -170,6 +192,7 @@ let DIVISION = function () {
 
 let PLUS = function () {
     this.calculate = function (a, b) {
+        ({ a, b } = hateNan(a, b));
         return Number.parseFloat(a) + Number.parseFloat(b);
     }
 
@@ -180,12 +203,21 @@ let PLUS = function () {
 
 let SUB = function () {
     this.calculate = function (a, b) {
+        ({ a, b } = hateNan(a, b));
         return Number.parseFloat(a) - Number.parseFloat(b);
     }
 
     this.toString = function () {
         return `Subtração Stratategy: `
     }
+}
+
+function hateNan(a, b) {
+    if (Number.isNaN(Number.parseFloat(a)))
+        a = 0;
+    if (Number.isNaN(Number.parseFloat(b)))
+        b = 0;
+    return { a, b };
 }
 
 function strategySetter(operacao) {
